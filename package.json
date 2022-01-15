@@ -1,6 +1,6 @@
 {
   "name": "react-local-storage-manager",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "license": "MIT",
   "description": "localStorage manager for React",
   "main": "./dist/index.js",
@@ -13,10 +13,10 @@
   "exports": {
     "./package.json": "./package.json",
     ".": {
-      "types": "./index.d.ts",
-      "module": "./esm/index.js",
-      "import": "./esm/index.mjs",
-      "default": "./index.js"
+      "types": "./dist/index.d.ts",
+      "module": "./dist/esm/index.js",
+      "import": "./dist/esm/index.mjs",
+      "default": "./dist/index.js"
     }
   },
   "scripts": {
