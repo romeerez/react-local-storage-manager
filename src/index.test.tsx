@@ -2,7 +2,7 @@ import { render, screen, act } from '@testing-library/react'
 import React from 'react'
 import '@testing-library/jest-dom'
 
-import { createLocalStorageManager, localStorageChangeEventName } from './index'
+import createLocalStore, { localStorageChangeEventName } from './index'
 
 const parseNumber = jest.fn((x): number => {
   const result = Number(x)
@@ -22,9 +22,9 @@ beforeEach(() => {
 })
 
 describe('lib', () => {
-  describe('.createLocalStorageManager', () => {
+  describe('.createLocalStore', () => {
     it("should create store which expose all what's needed", () => {
-      const store = createLocalStorageManager('key', parseNumber)
+      const store = createLocalStore('key', parseNumber)
       expect(Object.keys(store)).toEqual([
         'read',
         'get',
@@ -37,7 +37,7 @@ describe('lib', () => {
     })
 
     it('subscribes to localStorageChange and storage events once created', () => {
-      createLocalStorageManager('key', parseNumber)
+      createLocalStore('key', parseNumber)
 
       expect(addEventListenerSpy).toBeCalledWith(localStorageChangeEventName, expect.any(Function))
       expect(addEventListenerSpy).toBeCalledWith('storage', expect.any(Function))
@@ -47,7 +47,7 @@ describe('lib', () => {
   describe('.read reads value from localStorage', () => {
     describe('when no value in localStorage', () => {
       it('should return undefined if no default', () => {
-        const store = createLocalStorageManager('key', parseNumber)
+        const store = createLocalStore('key', parseNumber)
 
         const result = store.read()
 
@@ -58,7 +58,7 @@ describe('lib', () => {
       })
 
       it('should return default if present', () => {
-        const store = createLocalStorageManager('key', parseNumber, 123)
+        const store = createLocalStore('key', parseNumber, 123)
 
         const result = store.read()
 
@@ -75,7 +75,7 @@ describe('lib', () => {
         const defaultValue = 5
         localStorage.setItem('key', JSON.stringify(value))
         const validator = jest.fn((x) => x * 2)
-        const store = createLocalStorageManager('key', validator, defaultValue)
+        const store = createLocalStore('key', validator, defaultValue)
 
         const result = store.read()
 
@@ -88,7 +88,7 @@ describe('lib', () => {
       it('should return undefined if validator fails', () => {
         const value = 'not-a-number'
         localStorage.setItem('key', JSON.stringify(value))
-        const store = createLocalStorageManager('key', parseNumber)
+        const store = createLocalStore('key', parseNumber)
 
         const result = store.read()
 
@@ -101,7 +101,7 @@ describe('lib', () => {
       it('should return default value if validator fails and default was provided', () => {
         const value = 'not-a-number'
         localStorage.setItem('key', JSON.stringify(value))
-        const store = createLocalStorageManager('key', parseNumber, 123)
+        const store = createLocalStore('key', parseNumber, 123)
 
         const result = store.read()
 
@@ -116,7 +116,7 @@ describe('lib', () => {
   describe('.get reads a value only once and then is getting value from cache', () => {
     describe('when no value in localStorage', () => {
       it('should return undefined when no default', () => {
-        const store = createLocalStorageManager('key', parseNumber)
+        const store = createLocalStore('key', parseNumber)
         const readSpy = jest.spyOn(store, 'read')
 
         const result = store.get()
@@ -127,7 +127,7 @@ describe('lib', () => {
 
       it('should return default when provided', () => {
         const defaultValue = 123
-        const store = createLocalStorageManager('key', parseNumber, 123)
+        const store = createLocalStore('key', parseNumber, 123)
         const readSpy = jest.spyOn(store, 'read')
 
         const result = store.get()
@@ -137,7 +137,7 @@ describe('lib', () => {
       })
 
       it('should cache absence of value and not read storage second time', () => {
-        const store = createLocalStorageManager('key', parseNumber)
+        const store = createLocalStore('key', parseNumber)
         const readSpy = jest.spyOn(store, 'read')
 
         const result = store.get()
@@ -158,7 +158,7 @@ describe('lib', () => {
       it('should use cached value when calling second time', () => {
         const value = 123
         localStorage.setItem('key', JSON.stringify(value))
-        const store = createLocalStorageManager('key', parseNumber)
+        const store = createLocalStore('key', parseNumber)
         const readSpy = jest.spyOn(store, 'read')
 
         const result = store.get()
@@ -179,7 +179,7 @@ describe('lib', () => {
   describe('.set', () => {
     it('should save value to localStorage, to cache, dispatch event', () => {
       const newValue = 123
-      const store = createLocalStorageManager('key', parseNumber)
+      const store = createLocalStore('key', parseNumber)
       const readSpy = jest.spyOn(store, 'read')
 
       store.set(newValue)
@@ -191,7 +191,7 @@ describe('lib', () => {
 
     it('should pass data using .get when function is provided', () => {
       const defaultValue = 123
-      const store = createLocalStorageManager('key', parseNumber, defaultValue)
+      const store = createLocalStore('key', parseNumber, defaultValue)
       const getSpy = jest.spyOn(store, 'get')
 
       store.set((prevValue) => prevValue * 2)
@@ -206,7 +206,7 @@ describe('lib', () => {
   describe('.remove', () => {
     describe('when no default', () => {
       it('removes value from localStorage, sets cache to undefined, dispatches event', () => {
-        const store = createLocalStorageManager('key', parseNumber)
+        const store = createLocalStore('key', parseNumber)
         const readSpy = jest.spyOn(store, 'read')
 
         store.remove()
@@ -220,7 +220,7 @@ describe('lib', () => {
     describe('when have default', () => {
       it('removes value from localStorage, sets cache to default, dispatches event', () => {
         const defaultValue = 123
-        const store = createLocalStorageManager('key', parseNumber, defaultValue)
+        const store = createLocalStore('key', parseNumber, defaultValue)
         const readSpy = jest.spyOn(store, 'read')
 
         store.remove()
@@ -234,7 +234,7 @@ describe('lib', () => {
 
   describe('.watch', () => {
     it('should invoke listener with value when .set was called', () => {
-      const store = createLocalStorageManager('key', parseNumber)
+      const store = createLocalStore('key', parseNumber)
       const listener = jest.fn()
       const newValue = 123
 
@@ -245,7 +245,7 @@ describe('lib', () => {
     })
 
     it('should invoke listener with undefined when no default and .remove was called', () => {
-      const store = createLocalStorageManager('key', parseNumber)
+      const store = createLocalStore('key', parseNumber)
       const listener = jest.fn()
 
       store.watch(listener)
@@ -256,7 +256,7 @@ describe('lib', () => {
 
     it('should invoke listener with default when have default and .remove was called', () => {
       const defaultValue = 123
-      const store = createLocalStorageManager('key', parseNumber, defaultValue)
+      const store = createLocalStore('key', parseNumber, defaultValue)
       const listener = jest.fn()
 
       store.watch(listener)
@@ -266,7 +266,7 @@ describe('lib', () => {
     })
 
     it('should invoke listener with value when storage event happens', () => {
-      const storage = createLocalStorageManager('key', parseNumber)
+      const storage = createLocalStore('key', parseNumber)
       const listener = jest.fn()
       storage.watch(listener)
 
@@ -278,7 +278,7 @@ describe('lib', () => {
     })
 
     it('returns a function to remove event listener', () => {
-      const store = createLocalStorageManager('key', parseNumber)
+      const store = createLocalStore('key', parseNumber)
       const listener = jest.fn()
       const dispose = store.watch(listener)
 
@@ -293,7 +293,7 @@ describe('lib', () => {
 
   describe('.use', () => {
     it('should return undefined when no default', async () => {
-      const store = createLocalStorageManager('key', parseNumber)
+      const store = createLocalStore('key', parseNumber)
 
       const Component = () => {
         const value = store.use()
@@ -308,7 +308,7 @@ describe('lib', () => {
     })
 
     it('should return default value if set', async () => {
-      const store = createLocalStorageManager('key', parseNumber, 123)
+      const store = createLocalStore('key', parseNumber, 123)
 
       const Component = () => {
         const value = store.use()
@@ -323,7 +323,7 @@ describe('lib', () => {
     })
 
     it('should re-render component when setting new value or storage event happened', async () => {
-      const store = createLocalStorageManager('key', parseNumber)
+      const store = createLocalStore('key', parseNumber)
       let renderedTimes = 0
 
       const Component = () => {
@@ -356,7 +356,7 @@ describe('lib', () => {
     })
 
     it('should not re-render when setting the same value', async () => {
-      const store = createLocalStorageManager('key', parseNumber, 123)
+      const store = createLocalStore('key', parseNumber, 123)
       let renderedTimes = 0
 
       const Component = () => {
@@ -391,7 +391,7 @@ describe('lib', () => {
 
   describe('.destroy', () => {
     it('should remove event listeners', () => {
-      const store = createLocalStorageManager('key', parseNumber)
+      const store = createLocalStore('key', parseNumber)
 
       store.destroy()
 

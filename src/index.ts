@@ -34,22 +34,18 @@ export type LocalStorageManager<T> = {
   destroy(): void
 }
 
-export function createLocalStorageManager<T>(
+function createLocalStore<T>(
   key: string,
   validate: (data: unknown) => T,
   defaultValue: T,
 ): LocalStorageManager<T>
 
-export function createLocalStorageManager<T>(
+function createLocalStore<T>(
   key: string,
   validate: (data: unknown) => T,
 ): LocalStorageManager<T | void>
 
-export function createLocalStorageManager<T>(
-  key: string,
-  validate: (data: unknown) => T,
-  defaultValue?: T,
-) {
+function createLocalStore<T>(key: string, validate: (data: unknown) => T, defaultValue?: T) {
   type Cache = { value?: T | undefined }
 
   const cache: Cache = {}
@@ -152,3 +148,5 @@ export function createLocalStorageManager<T>(
 
   return store
 }
+
+export default createLocalStore
