@@ -11,6 +11,8 @@ When reading value from localStorage:
 
 Multiple React components will be kept in sync, localStorage values are synchronized between browser tabs
 
+When using it in Next.js on server side it won't throw any errors, it just won't save anything to localStorage as there is no localStorage on server side.
+
 Check out this example on [codepen](https://codesandbox.io/s/clever-night-zugq9?file=/src/App.tsx)
 
 Another example use case for 'Cart' with [zod](https://github.com/colinhacks/zod) for validation:
