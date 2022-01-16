@@ -1,6 +1,6 @@
 {
   "name": "react-local-storage-manager",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "license": "MIT",
   "description": "localStorage manager for React",
   "main": "./dist/index.js",
@@ -20,6 +20,7 @@
     }
   },
   "scripts": {
+    "prepublish": "yarn build",
     "build": "rimraf dist && rollup -c",
     "test": "jest",
     "lint": "eslint --fix --ext .js,.ts,.tsx ./src --ignore-path .gitignore",
