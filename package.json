@@ -1,6 +1,6 @@
 {
   "name": "react-local-storage-manager",
-  "version": "0.0.9",
+  "version": "0.1.0",
   "license": "MIT",
   "description": "localStorage manager for React",
   "main": "./dist/index.js",
