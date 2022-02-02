@@ -1,6 +1,6 @@
 {
   "name": "react-local-storage-manager",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "license": "MIT",
   "description": "localStorage manager for React",
   "main": "./dist/index.js",
@@ -26,6 +26,16 @@
     "lint": "eslint --fix --ext .js,.ts,.tsx ./src --ignore-path .gitignore",
     "prettier": "prettier --ignore-path .gitignore --write \"**/*.+(js|json|ts|tsx)\""
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/romeerez/react-local-storage-manager.git"
+  },
+  "keywords": [
+    "react",
+    "localStorage",
+    "manager",
+    "hooks"
+  ],
   "devDependencies": {
     "@babel/plugin-transform-react-jsx": "^7.16.7",
     "@babel/plugin-transform-typescript": "^7.16.8",

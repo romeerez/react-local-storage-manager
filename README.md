@@ -17,11 +17,11 @@ Full TypeScript support!
 
 # Small size
 
-[Full source code](./src/index.ts) - ~150 lines of code with comments, empty lines, typescript types. After compiling to JS it becomes ~80 lines of code.
+[Full source code](https://github.com/romeerez/react-local-storage-manager/blob/main/src/index.ts) - ~150 lines of code with comments, empty lines, typescript types. After compiling to JS it becomes ~80 lines of code.
 
 # Tested really well
 
-[Fully covered with tests](./src/index.test.tsx) - much more tests than actual code
+[Fully covered with tests](https://github.com/romeerez/react-local-storage-manager/blob/main/src/index.test.ts) - much more tests than actual code
 
 ## Why
 
